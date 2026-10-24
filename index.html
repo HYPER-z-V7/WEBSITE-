@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#09090d">
+<title>RIHAN AI</title>
+<style>
+:root{color-scheme:dark;--bg:#09090d;--panel:#121219;--panel2:#191922;--line:#2b2b36;--red:#ff334f;--text:#f7f7fb;--muted:#a5a5b5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#32121b 0,transparent 36%),var(--bg);color:var(--text);font:16px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+.app{max-width:1000px;margin:auto;min-height:100vh;display:flex;flex-direction:column;padding:16px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 2px 18px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#ff334f,#9d102b);font-weight:900;box-shadow:0 0 28px #ff334f30}
+h1{font-size:20px;margin:0;letter-spacing:.8px} .sub{font-size:12px;color:var(--muted);margin-top:3px}
+.status{font-size:12px;color:#9df5b1;border:1px solid #245c39;background:#102519;padding:7px 10px;border-radius:99px}
+main{flex:1;display:flex;flex-direction:column;gap:16px;padding:22px 0}
+.hero{text-align:center;padding:22px 10px 12px}.orb{width:76px;height:76px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#ff8796,#e61f42 48%,#490b1b 78%);box-shadow:0 0 55px #ff334f30;font-size:30px}
+.hero h2{margin:0 0 8px;font-size:clamp(24px,5vw,38px)}.hero p{color:var(--muted);margin:0;font-size:14px}
+.quick{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}.chip,button,select{font:inherit}.chip{border:1px solid var(--line);background:var(--panel);color:#dddde8;border-radius:99px;padding:9px 12px;cursor:pointer;font-size:13px}
+.chat{display:flex;flex-direction:column;gap:14px;padding:4px 0 12px}.msg{max-width:88%;padding:13px 15px;border:1px solid var(--line);border-radius:17px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.assistant{align-self:flex-start;background:var(--panel)}.user{align-self:flex-end;background:#35121b;border-color:#7c2032}.tag{font-size:11px;color:var(--muted);margin-bottom:5px}
+.composer{position:sticky;bottom:0;background:#09090df2;padding:12px 0 5px;border-top:1px solid var(--line);backdrop-filter:blur(14px)}
+.form{display:flex;gap:8px;align-items:flex-end;background:var(--panel);border:1px solid #383844;border-radius:19px;padding:9px}.form textarea{flex:1;resize:none;max-height:150px;min-height:43px;background:transparent;border:0;outline:0;color:var(--text);padding:10px;font:inherit}.iconbtn,.send{border:0;border-radius:13px;min-width:43px;height:43px;cursor:pointer}.iconbtn{background:var(--panel2);color:var(--text)}.send{background:var(--red);color:white;font-weight:800;padding:0 16px}.hint{text-align:center;color:#858595;font-size:11px;margin:9px 0 2px}.tools{display:flex;justify-content:space-between;gap:10px;align-items:center;color:var(--muted);font-size:12px;margin-top:10px}.tools select{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:7px}
+@media(min-width:700px){.app{padding:22px}.hero{padding-top:34px}.chat{padding:10px 7%}.composer{padding-left:7%;padding-right:7%}}
+</style>
+</head>
+<body><div class="app">
+<header><div class="brand"><div class="logo">R</div><div><h1>RIHAN AI</h1><div class="sub">Your all-in-one AI assistant</div></div></div><div class="status">● Assistant UI</div></header>
+<main>
+<section class="hero" id="hero"><div class="orb">✦</div><h2>What can I help with?</h2><p>Ask, create, learn, code — your ideas start here.</p>
+<div class="quick"><button class="chip" data-prompt="Explain this in simple Bangla: ">🇧🇩 Explain in Bangla</button><button class="chip" data-prompt="Help me write clean code for: ">💻 Coding</button><button class="chip" data-prompt="Write a creative social media caption about: ">✍️ Create content</button><button class="chip" data-prompt="Make a step-by-step learning plan for: ">📚 Learn something</button></div></section>
+<section class="chat" id="chat"><div class="msg assistant"><div class="tag">RIHAN AI · Welcome</div>Hi! আমি RIHAN AI। বাংলায় বা English-এ প্রশ্ন করো। API backend configure না করা পর্যন্ত এই demo শুধু interface দেখাবে।</div></section>
+</main>
+<section class="composer"><form class="form" id="form"><button type="button" class="iconbtn" id="mic" title="Voice input">🎙</button><textarea id="prompt" rows="1" placeholder="Message RIHAN AI..."></textarea><button class="send" type="submit">Send ↑</button></form><div class="tools"><span id="state">Demo mode · connect backend to enable AI</span><select id="lang" aria-label="Language"><option value="auto">Auto language</option><option value="bn">বাংলা</option><option value="en">English</option></select></div><div class="hint">AI can make mistakes. Don’t share passwords or private keys.</div></section>
+</div>
+<script>
+/* Set this to your deployed backend URL, e.g. https://your-api.example.com */
+const API_BASE = "http://localhost:3000";
+const chat=document.querySelector("#chat"),form=document.querySelector("#form"),input=document.querySelector("#prompt"),state=document.querySelector("#state");
+function addMessage(role,text){const el=document.createElement("div");el.className="msg "+role;const tag=document.createElement("div");tag.className="tag";tag.textContent=role==="user"?"YOU":"RIHAN AI";const body=document.createElement("div");body.textContent=text;el.append(tag,body);chat.append(el);el.scrollIntoView({behavior:"smooth",block:"end"});return body}
+form.addEventListener("submit",async e=>{e.preventDefault();const message=input.value.trim();if(!message)return;document.querySelector("#hero").style.display="none";addMessage("user",message);input.value="";input.style.height="43px";const target=addMessage("assistant","Thinking…");state.textContent="Connecting to AI backend…";
+try{const res=await fetch(API_BASE+"/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message,language:document.querySelector("#lang").value})});if(!res.ok)throw new Error("Backend returned "+res.status);const data=await res.json();target.textContent=data.reply||"No response received.";state.textContent="Connected to backend";}
+catch(err){target.textContent="এখনো AI backend যুক্ত হয়নি অথবা সার্ভার চালু নেই।\n\nBackend deploy করে API_BASE সেট করো। নিরাপত্তার জন্য Hugging Face token কখনো এই HTML ফাইলে রেখো না।";state.textContent="Backend not connected";}
+});
+input.addEventListener("input",()=>{input.style.height="43px";input.style.height=Math.min(input.scrollHeight,150)+"px"});
+document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>{input.value=b.dataset.prompt;input.focus()}));
+document.querySelector("#mic").addEventListener("click",()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){state.textContent="Voice recognition not supported in this browser.";return}const rec=new SR();rec.lang=document.querySelector("#lang").value==="en"?"en-US":"bn-BD";rec.onresult=e=>{input.value=e.results[0][0].transcript;input.focus()};rec.onerror=()=>state.textContent="Microphone permission or speech recognition unavailable.";rec.start();state.textContent="Listening…"});
+</script></body></html>
